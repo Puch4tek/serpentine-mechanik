@@ -1,9 +1,10 @@
-[gd_scene format=3 uid="uid://bojs455nja2ag"]
+[gd_scene format=4 uid="uid://bojs455nja2ag"]
 
-[sub_resource type="TileSet" id="TileSet_ve7bo"]
-tile_size = Vector2i(64, 64)
+[ext_resource type="TileSet" uid="uid://ct0vq54t5f715" path="res://assets/new_tile_set.tres" id="1_ibkli"]
 
-[node name="Game" type="Node2D" unique_id=1374465608]
+[node name="Game" type="Node2D" unique_id=757534878]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1992224933]
-tile_set = SubResource("TileSet_ve7bo")
+position = Vector2(300, 200)
+tile_map_data = PackedByteArray("AAACAAAABwAAAAAAAAD/////BwAAAAAAAAAAAP//BwAAAAAAAAABAAAABwAAAAAAAAACAAEABwAAAAAAAAADAAEABwAAAAAAAAAEAAIABwAAAAAAAAAEAAEABwAAAAAAAAAEAAAABwAAAAAAAAAEAP//BwAAAAAAAAADAAIABwAAAAAAAAADAAAABwAAAAAAAAADAP//BwAAAAAAAAACAAIABwAAAAAAAAACAP//BwAAAAAAAAABAAIABwAAAAAAAAABAAEABwAAAAAAAAABAP//BwAAAAAAAAAAAAIABwAAAAAAAAAAAAEABwAAAAAAAAAAAAAABwAAAAAAAAD//wIABwAAAAAAAAD//wEABwAAAAAAAAD//wAABwAAAAAAAAD+/wIABwAAAAAAAAD+/wEABwAAAAAAAAD+/wAABwAAAAAAAAD+////BwAAAAAAAAA=")
+tile_set = ExtResource("1_ibkli")
