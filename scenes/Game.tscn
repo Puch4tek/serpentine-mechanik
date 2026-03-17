@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bojs455nja2ag"]
+
+[sub_resource type="TileSet" id="TileSet_ve7bo"]
+tile_size = Vector2i(64, 64)
+
+[node name="Game" type="Node2D" unique_id=1374465608]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1992224933]
+tile_set = SubResource("TileSet_ve7bo")

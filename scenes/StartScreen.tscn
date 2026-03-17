@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://br2p3u82l6er7"]
+
+[ext_resource type="Script" uid="uid://w0b2wvpgaybn" path="res://scripts/start_button.gd" id="1_4vrcr"]
+[ext_resource type="Texture2D" uid="uid://c7s4wk5fqt5li" path="res://assets/logomwchanik-1.jpg" id="1_pswtb"]
+
+[node name="StartScreen" type="Control" unique_id=1485098784]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="." unique_id=1664327970]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SchoolLogo" type="TextureRect" parent="." unique_id=777273006]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_pswtb")
+expand_mode = 1
+
+[node name="Name" type="RichTextLabel" parent="." unique_id=735851431]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -356.0
+offset_top = 82.0
+offset_right = 356.0
+offset_bottom = 151.0
+grow_horizontal = 2
+theme_override_font_sizes/normal_font_size = 50
+text = "Zespół Szkół Politechnicznych"
+fit_content = true
+
+[node name="StartButton" type="Button" parent="." unique_id=1872892917]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -223.0
+offset_right = 200.0
+offset_bottom = -123.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Start"
+script = ExtResource("1_4vrcr")
+
+[connection signal="pressed" from="StartButton" to="StartButton" method="_on_pressed"]
