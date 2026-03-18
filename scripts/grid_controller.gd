@@ -70,7 +70,8 @@ func center_maze():
 func _ready() -> void:
 	load_level("res://resources/level1.tres")
 	build_grid()
-	render_tilemap()
+	#render_tilemap()
+	center_maze()
 	print(level.width)
 	print(level.height)
 	print(level.cells.size())
