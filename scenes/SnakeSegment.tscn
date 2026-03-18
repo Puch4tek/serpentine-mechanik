@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://b0qi2v3332eln"]
+
+[node name="SnakeSegment" type="Node2D" unique_id=1195560983]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=858766]

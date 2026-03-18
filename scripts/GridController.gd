@@ -11,7 +11,7 @@ const LEFT: int = 8
 var grid: Array[Variant] = []
 var level: LevelData
 
-@onready var tilemap: Node = get_node("../Maze")
+@onready var tilemap: TileMapLayer = get_node("../Maze")
 
 class Cell:
 	var top: bool = false
@@ -55,7 +55,7 @@ func render_tilemap():
 				tile_id |= BOTTOM
 			if cell.left:
 				tile_id |= LEFT
-			tilemap.set_cell(Vector2i(x,y), -1, Vector2i(tile_id, -1))
+			tilemap.set_cell(Vector2i(x,y), 0, Vector2i(tile_id, 24))
 
 func center_maze():
 	var maze_width: float = level.width * 64
@@ -70,7 +70,7 @@ func center_maze():
 func _ready() -> void:
 	load_level("res://resources/level1.tres")
 	build_grid()
-	#render_tilemap()
+	render_tilemap()
 	center_maze()
 	print(level.width)
 	print(level.height)
