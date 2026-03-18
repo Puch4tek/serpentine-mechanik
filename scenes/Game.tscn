@@ -1,7 +1,8 @@
 [gd_scene format=4 uid="uid://bojs455nja2ag"]
 
 [ext_resource type="TileSet" uid="uid://depa6o4myexgl" path="res://assets/tile_set_test.tres" id="1_ibkli"]
-[ext_resource type="Script" uid="uid://b6nre852bhee5" path="res://scripts/tile_map_draw_test.gd" id="2_qbsmt"]
+[ext_resource type="Script" uid="uid://hhdd64i5a1db" path="res://scripts/game_controller.gd" id="3_cpr0p"]
+[ext_resource type="Script" uid="uid://c0o5l4pw2gi7a" path="res://scripts/grid_controller.gd" id="4_78awf"]
 
 [node name="Game" type="Node2D" unique_id=757534878]
 
@@ -27,7 +28,16 @@ offset_bottom = 41.0
 grow_horizontal = 0
 text = "Reset"
 
-[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=538431606]
+[node name="Maze" type="TileMapLayer" parent="." unique_id=538431606]
 tile_map_data = PackedByteArray("AAAuABsAAAADAAQAAAAtABoAAAADAAQAAAAsABoAAAADAAQAAAArABkAAAADAAQAAAAqABkAAAADAAQAAAApABgAAAADAAQAAAAoABcAAAADAAQAAAAnABcAAAADAAQAAAAmABYAAAADAAQAAAAlABUAAAADAAQAAAAkABUAAAADAAQAAAAjABQAAAADAAQAAAAiABQAAAADAAQAAAAhABMAAAADAAQAAAAgABIAAAADAAQAAAAfABIAAAADAAQAAAAeABEAAAADAAQAAAAdABAAAAADAAQAAAAcABAAAAADAAQAAAAbAA8AAAADAAQAAAAaAA8AAAADAAQAAAAZAA4AAAADAAQAAAAYAA0AAAADAAQAAAAXAA0AAAADAAQAAAAWAAwAAAADAAQAAAAVAAsAAAADAAQAAAAUAAsAAAADAAQAAAATAAoAAAADAAQAAAASAAoAAAADAAQAAAARAAkAAAADAAQAAAAQAAgAAAADAAQAAAAPAAgAAAADAAQAAAAOAAcAAAADAAQAAAANAAYAAAADAAQAAAAMAAYAAAADAAQAAAALAAUAAAADAAQAAAAKAAUAAAADAAQAAAAJAAQAAAADAAQAAAAvABIAAAADAAQAAAAuABMAAAADAAQAAAAtABMAAAADAAQAAAAsABQAAAADAAQAAAArABQAAAADAAQAAAAqABUAAAADAAQAAAApABUAAAADAAQAAAAoABYAAAADAAQAAAAnABYAAAADAAQAAAAmABcAAAADAAQAAAAlABcAAAADAAQAAAAkABgAAAADAAQAAAAjABgAAAADAAQAAAAiABkAAAADAAQAAAAhABkAAAADAAQAAAAgABoAAAADAAQAAAAfABoAAAADAAQAAAAeABsAAAADAAQAAAAdABsAAAADAAQAAAAcABwAAAADAAQAAAAbABwAAAADAAQAAAAaAB0AAAADAAQAAAAZAB0AAAADAAQAAAAYAB4AAAADAAQAAAAXAB4AAAADAAQAAAAWAB8AAAADAAQAAAAVAB8AAAADAAQAAAAUACAAAAADAAQAAAA=")
 tile_set = ExtResource("1_ibkli")
-script = ExtResource("2_qbsmt")
+
+[node name="GameController" type="Node" parent="." unique_id=215183974]
+script = ExtResource("3_cpr0p")
+
+[node name="Snake" type="Node2D" parent="." unique_id=593779158]
+
+[node name="Enemies" type="Node2D" parent="." unique_id=605511939]
+
+[node name="GridController" type="Node" parent="." unique_id=1804560589]
+script = ExtResource("4_78awf")

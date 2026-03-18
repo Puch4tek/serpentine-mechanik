@@ -1,0 +1,8 @@
+- 0 = no walls
+- 1 = top
+- 2 = right
+- 4 = bottom
+- 8 = left
+- 3 = top + right
+- 12 = bottom + left
+- 15 = all walls
