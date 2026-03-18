@@ -1,11 +1,15 @@
 [gd_scene format=3 uid="uid://bojs455nja2ag"]
 
 [ext_resource type="TileSet" uid="uid://depa6o4myexgl" path="res://assets/tile_set_test.tres" id="1_ibkli"]
+[ext_resource type="Script" uid="uid://d2h0o1gufk0eh" path="res://scripts/Game.gd" id="1_s0nni"]
 [ext_resource type="Script" uid="uid://hhdd64i5a1db" path="res://scripts/GameController.gd" id="3_cpr0p"]
+[ext_resource type="PackedScene" uid="uid://pa5bvybpxx80" path="res://scenes/Pause.tscn" id="3_kiw3p"]
 [ext_resource type="Script" uid="uid://c0o5l4pw2gi7a" path="res://scripts/GridController.gd" id="4_78awf"]
+[ext_resource type="PackedScene" uid="uid://dnvx0si5iroa0" path="res://scenes/GameOver.tscn" id="4_400sg"]
 [ext_resource type="PackedScene" uid="uid://bfaj7dwqnnn8s" path="res://scenes/SceneTransition.tscn" id="4_s0nni"]
 
 [node name="Game" type="Node2D" unique_id=757534878]
+script = ExtResource("1_s0nni")
 
 [node name="SceneTransition" parent="." unique_id=660372780 instance=ExtResource("4_s0nni")]
 
@@ -43,15 +47,23 @@ offset_bottom = 41.0
 grow_horizontal = 0
 text = "Pauza"
 
+[node name="GameOver" parent="CanvasLayer" unique_id=1313632719 instance=ExtResource("4_400sg")]
+visible = false
+
+[node name="Pause" parent="CanvasLayer" unique_id=1084391853 instance=ExtResource("3_kiw3p")]
+process_mode = 3
+visible = false
+
 [node name="Maze" type="TileMapLayer" parent="." unique_id=538431606]
 tile_set = ExtResource("1_ibkli")
 
 [node name="GameController" type="Node" parent="." unique_id=215183974]
 script = ExtResource("3_cpr0p")
 
-[node name="Snake" type="Node2D" parent="." unique_id=593779158]
-
 [node name="Enemies" type="Node2D" parent="." unique_id=605511939]
 
 [node name="GridController" type="Node" parent="." unique_id=1804560589]
 script = ExtResource("4_78awf")
+
+[connection signal="pressed" from="CanvasLayer/Control/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/PauseButton" to="." method="_on_pause_button_pressed"]

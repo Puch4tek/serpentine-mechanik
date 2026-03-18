@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://br2p3u82l6er7"]
 
-[ext_resource type="Script" uid="uid://w0b2wvpgaybn" path="res://scripts/StartButton.gd" id="1_4vrcr"]
 [ext_resource type="Script" uid="uid://cr8n7jol0v3bj" path="res://scripts/StartScreen.gd" id="1_nj7f0"]
 [ext_resource type="Texture2D" uid="uid://c7s4wk5fqt5li" path="res://assets/logomwchanik-1.jpg" id="1_pswtb"]
 [ext_resource type="PackedScene" uid="uid://bfaj7dwqnnn8s" path="res://scenes/SceneTransition.tscn" id="4_2dvb4"]
@@ -13,6 +12,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nj7f0")
+
+[node name="SceneTransition" parent="." unique_id=660372780 instance=ExtResource("4_2dvb4")]
 
 [node name="Background" type="TextureRect" parent="." unique_id=1664327970]
 layout_mode = 1
@@ -52,24 +53,20 @@ theme_override_font_sizes/normal_font_size = 50
 text = "Zespół Szkół Politechnicznych"
 fit_content = true
 
-[node name="StartButton" type="Button" parent="." unique_id=1872892917]
+[node name="PressAnywhere" type="RichTextLabel" parent="." unique_id=1962911902]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -200.0
-offset_top = -223.0
-offset_right = 200.0
-offset_bottom = -123.0
+offset_left = -205.0
+offset_top = -186.0
+offset_right = 205.0
+offset_bottom = -142.0
 grow_horizontal = 2
 grow_vertical = 0
-disabled = true
-text = "Start"
-script = ExtResource("1_4vrcr")
-
-[node name="SceneTransition" parent="." unique_id=660372780 instance=ExtResource("4_2dvb4")]
+theme_override_font_sizes/normal_font_size = 26
+text = "Naciśnij gdziekolwiek aby zacząć"
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="pressed" from="StartButton" to="StartButton" method="_on_pressed"]
