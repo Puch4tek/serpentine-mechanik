@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cr8n7jol0v3bj" path="res://scripts/StartScreen.gd" id="1_nj7f0"]
 [ext_resource type="Texture2D" uid="uid://c7s4wk5fqt5li" path="res://assets/logomwchanik-1.jpg" id="1_pswtb"]
-[ext_resource type="PackedScene" uid="uid://bfaj7dwqnnn8s" path="res://scenes/SceneTransition.tscn" id="4_2dvb4"]
 
 [node name="StartScreen" type="Control" unique_id=1485098784]
 layout_mode = 3
@@ -12,8 +11,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nj7f0")
-
-[node name="SceneTransition" parent="." unique_id=660372780 instance=ExtResource("4_2dvb4")]
 
 [node name="Background" type="TextureRect" parent="." unique_id=1664327970]
 layout_mode = 1

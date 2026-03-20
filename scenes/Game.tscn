@@ -7,6 +7,9 @@
 [ext_resource type="Script" uid="uid://c0o5l4pw2gi7a" path="res://scripts/GridController.gd" id="4_78awf"]
 [ext_resource type="PackedScene" uid="uid://dnvx0si5iroa0" path="res://scenes/GameOver.tscn" id="4_400sg"]
 [ext_resource type="PackedScene" uid="uid://bfaj7dwqnnn8s" path="res://scenes/SceneTransition.tscn" id="4_s0nni"]
+[ext_resource type="PackedScene" uid="uid://c4os0jvx8a3mg" path="res://scenes/Snake.tscn" id="8_400sg"]
+[ext_resource type="Texture2D" uid="uid://c0q754skynf3v" path="res://assets/64.png" id="9_3xj3m"]
+[ext_resource type="PackedScene" uid="uid://b0qi2v3332eln" path="res://scenes/SnakeSegment.tscn" id="11_2rd6h"]
 
 [node name="Game" type="Node2D" unique_id=757534878]
 script = ExtResource("1_s0nni")
@@ -64,6 +67,11 @@ script = ExtResource("3_cpr0p")
 
 [node name="GridController" type="Node" parent="." unique_id=1804560589]
 script = ExtResource("4_78awf")
+
+[node name="Snake" parent="." unique_id=887367032 instance=ExtResource("8_400sg")]
+head_texture = ExtResource("9_3xj3m")
+body_texture = ExtResource("9_3xj3m")
+segment_scene = ExtResource("11_2rd6h")
 
 [connection signal="pressed" from="CanvasLayer/Control/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/PauseButton" to="." method="_on_pause_button_pressed"]

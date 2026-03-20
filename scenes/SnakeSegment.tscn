@@ -1,5 +1,12 @@
 [gd_scene format=3 uid="uid://b0qi2v3332eln"]
 
+[ext_resource type="Script" uid="uid://d07crclgvn5fm" path="res://scripts/SnakeSegment.gd" id="1_0e7cu"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_liex4"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+
 [node name="SnakeSegment" type="Node2D" unique_id=1195560983]
+script = ExtResource("1_0e7cu")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=858766]
+texture = SubResource("CompressedTexture2D_liex4")

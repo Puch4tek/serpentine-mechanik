@@ -66,7 +66,6 @@ func center_maze():
 	var offset_y: float = (screen_size.y - maze_height) / 2
 	tilemap.position = Vector2(offset_x, offset_y)
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	load_level("res://resources/level1.tres")
 	build_grid()
@@ -77,7 +76,30 @@ func _ready() -> void:
 	print(level.cells.size())
 	pass # Replace with function body.
 
+# Dodaj na końcu klasy, przed _process
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+func can_move(cell: Vector2i, dir: Vector2i) -> bool:
+	# Sprawdź czy cell jest w granicach siatki
+	var next: Vector2i = cell + dir
+	if next.x < 0 or next.x >= level.width or next.y < 0 or next.y >= level.height:
+		return false
+
+	var c: Cell = grid[cell.y][cell.x]
+
+	if dir == Vector2i.RIGHT:
+		return not c.right
+	if dir == Vector2i.LEFT:
+		return not c.left
+	if dir == Vector2i(0, -1):   # UP
+		return not c.top
+	if dir == Vector2i(0, 1):    # DOWN
+		return not c.bottom
+
+	return false
+
+func get_maze_offset() -> Vector2:
+	return tilemap.position
+
+
 func _process(delta: float) -> void:
 	pass
