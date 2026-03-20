@@ -20,10 +20,9 @@ func start_game() -> void:
 	snake.maze_offset = grid_controller.get_maze_offset()
 	snake.tile_size = 64
 
-	# Spawn węża na środku labiryntu
-	var start_x: int = grid_controller.level.width / 2
-	var start_y: int = grid_controller.level.height / 2
-	snake.spawn_snake(Vector2i(start_x, start_y), 3)
+	# Spawn węża 
+	
+	snake.spawn_snake(grid_controller.get_snake_spawn(), 3)
 	
 	queued_direction = Vector2i.RIGHT
 	snake.set_direction(queued_direction)

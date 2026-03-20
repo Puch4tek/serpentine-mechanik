@@ -67,7 +67,7 @@ func center_maze():
 	tilemap.position = Vector2(offset_x, offset_y)
 
 func _ready() -> void:
-	load_level("res://resources/level1.tres")
+	load_level("res://resources/level2.tres")
 	build_grid()
 	render_tilemap()
 	center_maze()
@@ -100,6 +100,8 @@ func can_move(cell: Vector2i, dir: Vector2i) -> bool:
 func get_maze_offset() -> Vector2:
 	return tilemap.position
 
+func get_snake_spawn() -> Vector2i:
+	return level.snake_spawn
 
 func _process(delta: float) -> void:
 	pass

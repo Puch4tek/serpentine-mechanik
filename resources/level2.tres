@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://caluom0bcc5hx"]
+
+[ext_resource type="Script" uid="uid://c2cloq6a347j2" path="res://scripts/LevelData.gd" id="1_vrrc2"]
+
+[resource]
+script = ExtResource("1_vrrc2")
+snake_spawn = Vector2i(12, 10)
+cells = PackedInt32Array(9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6)
