@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://pa5bvybpxx80" path="res://scenes/Pause.tscn" id="3_kiw3p"]
 [ext_resource type="Script" uid="uid://c0o5l4pw2gi7a" path="res://scripts/GridController.gd" id="4_78awf"]
 [ext_resource type="PackedScene" uid="uid://dnvx0si5iroa0" path="res://scenes/GameOver.tscn" id="4_400sg"]
-[ext_resource type="PackedScene" uid="uid://bfaj7dwqnnn8s" path="res://scenes/SceneTransition.tscn" id="4_s0nni"]
 [ext_resource type="PackedScene" uid="uid://c4os0jvx8a3mg" path="res://scenes/Snake.tscn" id="8_400sg"]
 [ext_resource type="Texture2D" uid="uid://c0q754skynf3v" path="res://assets/64.png" id="9_3xj3m"]
 [ext_resource type="Texture2D" uid="uid://dw10miaj6ut86" path="res://assets/64-2.png" id="9_mcffj"]
@@ -15,7 +14,18 @@
 [node name="Game" type="Node2D" unique_id=757534878]
 script = ExtResource("1_s0nni")
 
-[node name="SceneTransition" parent="." unique_id=660372780 instance=ExtResource("4_s0nni")]
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=934399183]
+layer = -5
+
+[node name="ColorRect" type="ColorRect" parent="BackgroundLayer" unique_id=744581724]
+z_index = -5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.78431374, 0.75686276, 0.6509804, 1)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2077377790]
 
@@ -26,15 +36,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="ResetButton" type="Button" parent="CanvasLayer/Control" unique_id=1394376547]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -60.0
+offset_left = -133.0
 offset_top = 10.0
-offset_right = -9.0
+offset_right = -82.0
 offset_bottom = 41.0
 grow_horizontal = 0
 text = "Reset"
@@ -44,14 +55,15 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -123.0
+offset_left = -196.0
 offset_top = 10.0
-offset_right = -68.0
+offset_right = -141.0
 offset_bottom = 41.0
 grow_horizontal = 0
 text = "Pauza"
 
 [node name="GameOver" parent="CanvasLayer" unique_id=1313632719 instance=ExtResource("4_400sg")]
+process_mode = 3
 visible = false
 
 [node name="Pause" parent="CanvasLayer" unique_id=1084391853 instance=ExtResource("3_kiw3p")]
@@ -59,17 +71,18 @@ process_mode = 3
 visible = false
 
 [node name="Maze" type="TileMapLayer" parent="." unique_id=538431606]
+z_index = 10
+position = Vector2(-1, -1)
 tile_set = ExtResource("1_ibkli")
 
 [node name="GameController" type="Node" parent="." unique_id=215183974]
 script = ExtResource("3_cpr0p")
 
-[node name="Enemies" type="Node2D" parent="." unique_id=605511939]
-
 [node name="GridController" type="Node" parent="." unique_id=1804560589]
 script = ExtResource("4_78awf")
 
 [node name="Snake" parent="." unique_id=887367032 instance=ExtResource("8_400sg")]
+z_index = 10
 head_texture = ExtResource("9_mcffj")
 body_texture = ExtResource("9_3xj3m")
 segment_scene = ExtResource("11_2rd6h")

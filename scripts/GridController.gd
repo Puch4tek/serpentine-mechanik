@@ -55,22 +55,23 @@ func render_tilemap():
 				tile_id |= BOTTOM
 			if cell.left:
 				tile_id |= LEFT
-			tilemap.set_cell(Vector2i(x,y), 0, Vector2i(tile_id, 24))
+			tilemap.set_cell(Vector2i(x,y), 0, Vector2i(tile_id, 0))
 
 func center_maze():
 	var maze_width: float = level.width * 64
 	var maze_height: float = level.height * 64
-	var screen_size: Vector2i = DisplayServer.screen_get_size()
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	
-	var offset_x: float = (screen_size.x - maze_width) / 2
-	var offset_y: float = (screen_size.y - maze_height) / 2
+	var offset_x: float = (viewport_size.x - maze_width) / 2.0
+	var offset_y: float = (viewport_size.y - maze_height) / 2.0
 	tilemap.position = Vector2(offset_x, offset_y)
 
 func _ready() -> void:
-	load_level("res://resources/level2.tres")
+	load_level("res://resources/level1.tres")
 	build_grid()
 	render_tilemap()
 	center_maze()
+	get_viewport().size_changed.connect(center_maze)
 	print(level.width)
 	print(level.height)
 	print(level.cells.size())
@@ -79,9 +80,12 @@ func _ready() -> void:
 # Dodaj na końcu klasy, przed _process
 
 func can_move(cell: Vector2i, dir: Vector2i) -> bool:
-	# Sprawdź czy cell jest w granicach siatki
+	if not is_inside_grid(cell):
+		return false
+
+	# Sprawdź czy next jest w granicach siatki
 	var next: Vector2i = cell + dir
-	if next.x < 0 or next.x >= level.width or next.y < 0 or next.y >= level.height:
+	if not is_inside_grid(next):
 		return false
 
 	var c: Cell = grid[cell.y][cell.x]
@@ -102,6 +106,27 @@ func get_maze_offset() -> Vector2:
 
 func get_snake_spawn() -> Vector2i:
 	return level.snake_spawn
+
+func get_enemy_spawns(body_length: int = 3) -> Array[Vector2i]:
+	var valid_spawns: Array[Vector2i] = []
+	var safe_length: int = max(1, body_length)
+	for spawn in level.enemy_spawns:
+		if not is_inside_grid(spawn):
+			continue
+
+		var fits: bool = true
+		for i in range(safe_length):
+			var body_cell: Vector2i = spawn - Vector2i(i, 0)
+			if not is_inside_grid(body_cell):
+				fits = false
+				break
+
+		if fits:
+			valid_spawns.append(spawn)
+	return valid_spawns
+
+func is_inside_grid(cell: Vector2i) -> bool:
+	return cell.x >= 0 and cell.x < level.width and cell.y >= 0 and cell.y < level.height
 
 func _process(delta: float) -> void:
 	pass
