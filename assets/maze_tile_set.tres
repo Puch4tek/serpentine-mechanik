@@ -1,0 +1,27 @@
+[gd_resource type="TileSet" format=3 uid="uid://d4gneonnsmq3w"]
+
+[ext_resource type="Texture2D" uid="uid://dwtyi4nq1q7ff" path="res://assets/plansza-img.png" id="1_417tm"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_huwod"]
+texture = ExtResource("1_417tm")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+11:0/0 = 0
+12:0/0 = 0
+13:0/0 = 0
+14:0/0 = 0
+15:0/0 = 0
+
+[resource]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_huwod")

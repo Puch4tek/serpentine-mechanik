@@ -4,17 +4,21 @@ extends Node
 @export var move_interval: float = 0.25
 @export var enemy_length: int = 3
 @export var enemy_scene: PackedScene = preload("res://scenes/Snake.tscn")
+@export var extension_scene: PackedScene = preload("res://scenes/Extension.tscn")
 @export var swipe_min_distance: float = 48.0
 
 @onready var grid_controller: Node = get_node("../GridController")
 @onready var snake: Node2D = get_node("../Snake")
 @onready var game_over_ui: Control = get_node("../CanvasLayer/GameOver")
 @onready var game_over_backdrop: Control = get_node_or_null("../CanvasLayer/GameOver/ColorRect")
+@onready var score_label: Label = get_node_or_null("../CanvasLayer/Control/ScoreLabel")
 
 var move_timer: float = 0.0
 var queued_direction: Vector2i = Vector2i.RIGHT
 var is_running: bool = false
 var enemy_snakes: Array[Node2D] = []
+var extensions: Array[Node2D] = []
+var score: int = 0
 var active_swipe_index: int = -1
 var swipe_start_position: Vector2 = Vector2.ZERO
 
@@ -25,6 +29,8 @@ func _ready() -> void:
 
 func start_game() -> void:
 	clear_enemy_snakes()
+	clear_extensions()
+	score = 0
 
 	# Synchronizuj offset labiryntu z wężem
 	snake.maze_offset = grid_controller.get_maze_offset()
@@ -37,9 +43,12 @@ func start_game() -> void:
 	queued_direction = pick_player_initial_direction()
 	snake.set_direction(queued_direction)
 	spawn_enemy_snakes()
+	spawn_extension()
 
 	move_timer = 0.0
 	is_running = true
+
+	update_score_label()
 
 	if game_over_ui:
 		game_over_ui.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -66,6 +75,7 @@ func run_tick() -> void:
 		if not try_move_snake(snake, true):
 			trigger_game_over()
 			return
+		check_extension_pickup()
 
 	for idx in range(enemy_snakes.size() - 1, -1, -1):
 		var enemy: Node2D = enemy_snakes[idx]
@@ -108,6 +118,12 @@ func clear_enemy_snakes() -> void:
 		if is_instance_valid(enemy):
 			enemy.queue_free()
 	enemy_snakes.clear()
+
+func clear_extensions() -> void:
+	for ext in extensions:
+		if is_instance_valid(ext):
+			ext.queue_free()
+	extensions.clear()
 
 func pick_player_initial_direction() -> Vector2i:
 	var candidates: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i(0, -1), Vector2i(0, 1)]
@@ -214,6 +230,59 @@ func snake_has_body_at_cell(check_snake: Node2D, cell: Vector2i, is_self: bool) 
 
 
 	return check_snake.contains_cell(cell, start_index, end_index)
+
+func get_free_cells() -> Array[Vector2i]:
+	var free: Array[Vector2i] = []
+	var level = grid_controller.level
+	for y in range(level.height):
+		for x in range(level.width):
+			var cell := Vector2i(x, y)
+			if snake.contains_cell(cell):
+				continue
+			var blocked := false
+			for enemy in enemy_snakes:
+				if is_instance_valid(enemy) and enemy.contains_cell(cell):
+					blocked = true
+					break
+			if blocked:
+				continue
+			for ext in extensions:
+				if is_instance_valid(ext) and ext.cell == cell:
+					blocked = true
+					break
+			if not blocked:
+				free.append(cell)
+	return free
+
+func spawn_extension() -> void:
+	if extension_scene == null:
+		return
+	var free_cells := get_free_cells()
+	if free_cells.is_empty():
+		return
+	var cell: Vector2i = free_cells[randi() % free_cells.size()]
+	var ext: Node2D = extension_scene.instantiate()
+	get_parent().add_child(ext)
+	ext.setup(cell, randi_range(1, 6), grid_controller.get_maze_offset(), snake.tile_size)
+	extensions.append(ext)
+
+func check_extension_pickup() -> void:
+	for i in range(extensions.size() - 1, -1, -1):
+		var ext = extensions[i]
+		if not is_instance_valid(ext):
+			extensions.remove_at(i)
+			continue
+		if ext.cell == snake.head_cell:
+			score += ext.value
+			snake.grow()
+			ext.queue_free()
+			extensions.remove_at(i)
+			update_score_label()
+			spawn_extension()
+
+func update_score_label() -> void:
+	if score_label:
+		score_label.text = "Score: " + str(score)
 
 func trigger_game_over() -> void:
 	game_over_ui.visible = true
