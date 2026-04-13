@@ -1,7 +1,9 @@
 extends Node
 
-# Czas między krokami węża (w sekundach)
-@export var move_interval: float = 0.25
+# Ciągły ruch: gracz ma większą prędkość od AI.
+@export var player_speed_px: float = 260.0
+@export var enemy_speed_px: float = 150.0
+@export var enemy_direction_interval: float = 0.18
 @export var enemy_length: int = 3
 @export var enemy_scene: PackedScene = preload("res://scenes/Snake.tscn")
 @export var extension_scene: PackedScene = preload("res://scenes/Extension.tscn")
@@ -13,7 +15,7 @@ extends Node
 @onready var game_over_backdrop: Control = get_node_or_null("../CanvasLayer/GameOver/ColorRect")
 @onready var score_label: Label = get_node_or_null("../CanvasLayer/Control/ScoreLabel")
 
-var move_timer: float = 0.0
+var enemy_direction_timer: float = 0.0
 var queued_direction: Vector2i = Vector2i.RIGHT
 var is_running: bool = false
 var enemy_snakes: Array[Node2D] = []
@@ -21,6 +23,7 @@ var extensions: Array[Node2D] = []
 var score: int = 0
 var active_swipe_index: int = -1
 var swipe_start_position: Vector2 = Vector2.ZERO
+const REAR_GRACE_SEGMENTS: int = 2
 
 func _ready() -> void:
 	# Poczekaj jeden frame, żeby GridController zdążył się zainicjować
@@ -35,6 +38,7 @@ func start_game() -> void:
 	# Synchronizuj offset labiryntu z wężem
 	snake.maze_offset = grid_controller.get_maze_offset()
 	snake.tile_size = 64
+	snake.move_speed_px = player_speed_px
 
 	# Spawn węża 
 	
@@ -45,7 +49,7 @@ func start_game() -> void:
 	spawn_enemy_snakes()
 	spawn_extension()
 
-	move_timer = 0.0
+	enemy_direction_timer = 0.0
 	is_running = true
 
 	update_score_label()
@@ -60,23 +64,25 @@ func _process(delta: float) -> void:
 	if not is_running:
 		return
 
-	move_timer += delta
-	if move_timer >= move_interval:
-		move_timer -= move_interval
-		run_tick()
+	run_player_frame(delta)
+	if not is_running:
+		return
 
-func run_tick() -> void:
-	# Gracz zawsze porusza się jako pierwszy.
+	enemy_direction_timer += delta
+	if enemy_direction_timer >= enemy_direction_interval:
+		enemy_direction_timer -= enemy_direction_interval
+		update_enemy_directions(enemy_direction_interval)
+
+	run_enemy_frame(delta)
+
+func run_player_frame(delta: float) -> void:
 	snake.set_direction(queued_direction)
+	if not try_advance_snake(snake, delta, true):
+		trigger_game_over()
+		return
+	check_extension_pickup()
 
-	# Jeśli gracz jest pod ścianą, nie kończ od razu gry.
-	# Pozwól mu zmienić kierunek i ruszyć w kolejnym ticku.
-	if snake.can_move_forward(grid_controller):
-		if not try_move_snake(snake, true):
-			trigger_game_over()
-			return
-		check_extension_pickup()
-
+func run_enemy_frame(delta: float) -> void:
 	for idx in range(enemy_snakes.size() - 1, -1, -1):
 		var enemy: Node2D = enemy_snakes[idx]
 		if not is_instance_valid(enemy):
@@ -88,12 +94,15 @@ func run_tick() -> void:
 			enemy_snakes.remove_at(idx)
 			continue
 
-		var enemy_dir := choose_enemy_direction(enemy)
-		enemy.set_direction(enemy_dir)
-
-		if not try_move_snake(enemy, false):
+		if not try_advance_snake(enemy, delta, false):
 			enemy.queue_free()
 			enemy_snakes.remove_at(idx)
+
+func update_enemy_directions(lookahead_delta: float) -> void:
+	for enemy in enemy_snakes:
+		if not is_instance_valid(enemy):
+			continue
+		enemy.set_direction(choose_enemy_direction(enemy, lookahead_delta))
 
 func spawn_enemy_snakes() -> void:
 	var enemy_spawns: Array[Vector2i] = grid_controller.get_enemy_spawns(enemy_length)
@@ -107,6 +116,7 @@ func spawn_enemy_snakes() -> void:
 		enemy.segment_scene = snake.segment_scene
 		enemy.maze_offset = grid_controller.get_maze_offset()
 		enemy.tile_size = snake.tile_size
+		enemy.move_speed_px = enemy_speed_px
 
 		get_parent().add_child(enemy)
 		enemy.spawn_snake(spawn, enemy_length)
@@ -152,7 +162,7 @@ func is_enemy_spawn_valid(spawn: Vector2i) -> bool:
 	return true
 
 func is_enemy_runtime_valid(enemy: Node2D) -> bool:
-	if enemy.segment_cells.is_empty():
+	if enemy.segment_positions.is_empty():
 		return false
 
 	for cell in enemy.segment_cells:
@@ -168,7 +178,7 @@ func pick_initial_direction(enemy: Node2D) -> Vector2i:
 			return dir
 	return Vector2i.RIGHT
 
-func choose_enemy_direction(enemy: Node2D) -> Vector2i:
+func choose_enemy_direction(enemy: Node2D, lookahead_delta: float) -> Vector2i:
 	var current: Vector2i = enemy.direction
 	var candidates: Array[Vector2i] = [
 		current,
@@ -181,8 +191,8 @@ func choose_enemy_direction(enemy: Node2D) -> Vector2i:
 		if not enemy.can_move_forward(grid_controller, dir):
 			continue
 
-		var next_cell: Vector2i = enemy.get_next_head(dir)
-		if cell_occupied_by_any_body(next_cell, enemy):
+		var next_head_world: Vector2 = enemy.get_predicted_head_world(lookahead_delta, dir)
+		if point_occupied_by_any_body(next_head_world, enemy.body_radius_px, enemy):
 			continue
 
 		return dir
@@ -195,41 +205,116 @@ func turn_left(dir: Vector2i) -> Vector2i:
 func turn_right(dir: Vector2i) -> Vector2i:
 	return Vector2i(-dir.y, dir.x)
 
-func try_move_snake(moving_snake: Node2D, is_player: bool) -> bool:
-	if not moving_snake.can_move_forward(grid_controller):
-		return false
+func try_advance_snake(moving_snake: Node2D, delta: float, is_player: bool) -> bool:
+	var effective_dir: Vector2i = moving_snake.get_effective_direction(grid_controller)
+	if not grid_controller.can_move(moving_snake.head_cell, effective_dir):
+		moving_snake.advance(delta, grid_controller)
+		return true
 
-	var next_head: Vector2i = moving_snake.get_next_head()
-	if cell_occupied_by_any_body(next_head, moving_snake):
+	var next_head_world: Vector2 = moving_snake.get_predicted_head_world(delta, effective_dir)
+	try_consume_tail_from_rear(moving_snake, next_head_world, moving_snake.head_radius_px)
+	if point_occupied_by_any_body(next_head_world, moving_snake.head_radius_px, moving_snake):
 		if is_player:
 			return false
 		return false
 
-	moving_snake.move(grid_controller)
+	moving_snake.advance(delta, grid_controller)
 	return true
 
-func cell_occupied_by_any_body(cell: Vector2i, moving_snake: Node2D) -> bool:
-	if snake_has_body_at_cell(snake, cell, moving_snake == snake):
+func point_occupied_by_any_body(point: Vector2, point_radius: float, moving_snake: Node2D) -> bool:
+	if snake_has_body_at_point(snake, point, point_radius, moving_snake == snake, moving_snake):
 		return true
 
 	for enemy in enemy_snakes:
 		if not is_instance_valid(enemy):
 			continue
-		if snake_has_body_at_cell(enemy, cell, moving_snake == enemy):
+		if snake_has_body_at_point(enemy, point, point_radius, moving_snake == enemy, moving_snake):
 			return true
 
 	return false
 
-func snake_has_body_at_cell(check_snake: Node2D, cell: Vector2i, is_self: bool) -> bool:
+func snake_has_body_at_point(check_snake: Node2D, point: Vector2, point_radius: float, is_self: bool, moving_snake: Node2D) -> bool:
 	if is_self:
 		# Ten projekt pozwala jechać po własnym ciele (w tym zawracanie).
 		return false
 
 	var start_index: int = 0
-	var end_index: int = check_snake.segment_cells.size()
+	var end_index: int = check_snake.segment_positions.size()
+	if is_rear_end_contact(moving_snake, check_snake, point, point_radius):
+		end_index = max(0, end_index - REAR_GRACE_SEGMENTS)
+	return check_snake.collides_with_point(point, point_radius, start_index, end_index)
 
+func try_consume_tail_from_rear(moving_snake: Node2D, point: Vector2, point_radius: float) -> bool:
+	var target: Node2D = find_rear_end_target(moving_snake, point, point_radius)
+	if target == null:
+		return false
 
-	return check_snake.contains_cell(cell, start_index, end_index)
+	if target.segment_positions.size() <= 1:
+		eliminate_snake(target)
+	else:
+		if target.shrink_tail(1, 1) <= 0:
+			return false
+
+	moving_snake.grow()
+	if moving_snake == snake:
+		score += 1
+		update_score_label()
+	return true
+
+func eliminate_snake(target: Node2D) -> void:
+	if target == snake:
+		trigger_game_over()
+		return
+
+	var idx := enemy_snakes.find(target)
+	if idx != -1:
+		enemy_snakes.remove_at(idx)
+	if is_instance_valid(target):
+		target.queue_free()
+
+func find_rear_end_target(moving_snake: Node2D, point: Vector2, point_radius: float) -> Node2D:
+	if is_rear_end_contact(moving_snake, snake, point, point_radius):
+		return snake
+
+	for enemy in enemy_snakes:
+		if not is_instance_valid(enemy):
+			continue
+		if is_rear_end_contact(moving_snake, enemy, point, point_radius):
+			return enemy
+
+	return null
+
+func is_rear_end_contact(moving_snake: Node2D, target_snake: Node2D, point: Vector2, point_radius: float) -> bool:
+	if target_snake == moving_snake:
+		return false
+
+	var size: int = target_snake.segment_positions.size()
+	if size < 1:
+		return false
+
+	var tail_index: int = size - 1
+	var tail_pos: Vector2 = target_snake.segment_positions[tail_index]
+	var tail_radius: float = target_snake.body_radius_px
+	if tail_pos.distance_to(point) > point_radius + tail_radius:
+		return false
+
+	var tail_forward: Vector2
+	if size >= 2:
+		var prev_pos: Vector2 = target_snake.segment_positions[tail_index - 1]
+		tail_forward = tail_pos - prev_pos
+	else:
+		tail_forward = Vector2(target_snake.get_effective_direction(grid_controller))
+
+	if tail_forward.length_squared() <= 0.0001:
+		return false
+	tail_forward = tail_forward.normalized()
+
+	var move_dir: Vector2 = Vector2(moving_snake.get_effective_direction(grid_controller))
+	if move_dir.length_squared() <= 0.0001:
+		return false
+	move_dir = move_dir.normalized()
+
+	return move_dir.dot(tail_forward) > 0.2
 
 func get_free_cells() -> Array[Vector2i]:
 	var free: Array[Vector2i] = []
