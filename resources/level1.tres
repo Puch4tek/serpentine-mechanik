@@ -4,5 +4,22 @@
 
 [resource]
 script = ExtResource("1_4y0e3")
-enemy_spawns = Array[Vector2i]([Vector2i(3, 4)])
-cells = PackedInt32Array(9, 1, 5, 5, 5, 1, 5, 1, 5, 1, 5, 5, 3, 10, 12, 3, 9, 3, 10, 9, 4, 3, 8, 5, 3, 10, 10, 9, 6, 10, 12, 2, 12, 3, 10, 12, 3, 10, 10, 8, 2, 9, 0, 3, 8, 5, 6, 8, 5, 6, 12, 2, 10, 10, 10, 10, 10, 8, 1, 1, 4, 5, 5, 3, 10, 10, 8, 2, 10, 8, 2, 10, 8, 5, 5, 5, 0, 2, 10, 10, 10, 10, 10, 8, 4, 4, 1, 5, 5, 6, 10, 12, 2, 12, 0, 6, 8, 5, 3, 8, 5, 3, 9, 6, 11, 12, 3, 10, 9, 2, 9, 6, 10, 9, 6, 10, 11, 10, 9, 6, 12, 6, 10, 12, 1, 2, 8, 5, 6, 10, 14, 12, 5, 5, 5, 4, 5, 4, 5, 6, 13, 5, 6)
+player_spawn_box = Vector2i(12, 9)
+player_spawn_direction = Vector2i(0, -1)
+player_exit_cell = Vector2i(12, 8)
+enemy_spawns = Array[Vector2i]([Vector2i(0, 9), Vector2i(6, 1), Vector2i(12, 5)])
+enemy_spawn_directions = Array[Vector2i]([Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)])
+enemy_exit_cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(7, 1), Vector2i(11, 5)])
+cells_2d = Array[PackedInt32Array]([
+	PackedInt32Array(9, 1, 5, 5, 5, 1, 5, 1, 5, 1, 5, 5, 3),
+	PackedInt32Array(10, 12, 3, 9, 3, 10, 9, 4, 3, 8, 5, 3, 10),
+	PackedInt32Array(10, 9, 6, 10, 12, 2, 12, 3, 10, 12, 3, 10, 10),
+	PackedInt32Array(8, 2, 9, 0, 3, 8, 5, 6, 8, 5, 6, 12, 2),
+	PackedInt32Array(10, 10, 10, 10, 10, 8, 1, 1, 4, 5, 5, 3, 10),
+	PackedInt32Array(10, 8, 2, 10, 8, 2, 10, 8, 5, 5, 5, 0, 2),
+	PackedInt32Array(10, 10, 10, 10, 10, 8, 4, 4, 1, 5, 5, 6, 10),
+	PackedInt32Array(12, 2, 12, 0, 6, 8, 5, 3, 8, 5, 3, 9, 6),
+	PackedInt32Array(10, 12, 3, 10, 9, 2, 9, 6, 10, 9, 6, 10, 10),
+	PackedInt32Array(10, 9, 6, 12, 6, 10, 12, 1, 2, 8, 5, 6, 10),
+	PackedInt32Array(14, 12, 5, 5, 5, 4, 5, 4, 5, 6, 13, 5, 6),
+])

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://b2a5e1qr8oh0y"]
+
+[ext_resource type="Script" uid="uid://c2cloq6a347j2" path="res://scripts/LevelData.gd" id="1_hii0e"]
+
+[resource]
+script = ExtResource("1_hii0e")
+metadata/_custom_type_script = "uid://c2cloq6a347j2"
+cells_2d = Array[PackedInt32Array]([
+    PackedInt32Array(
+])

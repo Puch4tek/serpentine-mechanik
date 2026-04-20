@@ -19,6 +19,7 @@ z_index = 15
 head_texture = ExtResource("9_mcffj")
 body_texture = ExtResource("9_3xj3m")
 segment_scene = ExtResource("11_2rd6h")
+body_corner_texture = ExtResource("9_3xj3m")
 
 [node name="Maze" type="TileMapLayer" parent="." unique_id=538431606]
 z_index = 10
@@ -69,16 +70,18 @@ offset_bottom = 41.0
 theme_override_font_sizes/font_size = 24
 text = "Score: 0"
 
-[node name="GameOver" parent="CanvasLayer" unique_id=1313632719 instance=ExtResource("4_400sg")]
+[node name="Pause" parent="CanvasLayer" unique_id=1084391853 instance=ExtResource("3_kiw3p")]
 process_mode = 3
 visible = false
 
-[node name="Pause" parent="CanvasLayer" unique_id=1084391853 instance=ExtResource("3_kiw3p")]
+[node name="GameOver" parent="CanvasLayer" unique_id=1313632719 instance=ExtResource("4_400sg")]
 process_mode = 3
 visible = false
 
 [node name="GameController" type="Node" parent="." unique_id=215183974]
 script = ExtResource("3_cpr0p")
+enemy_head_texture = ExtResource("9_3xj3m")
+enemy_body_texture = ExtResource("9_mcffj")
 
 [node name="GridController" type="Node" parent="." unique_id=1804560589]
 script = ExtResource("4_78awf")
